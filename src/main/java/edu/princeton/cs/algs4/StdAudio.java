@@ -5,9 +5,6 @@
  *
  *  Simple library for reading, writing, and manipulating audio.
  *
- *  Supported formats:
- *  https://www.oracle.com/java/technologies/javase/jmf-211-formats.html
- *
  ******************************************************************************/
 
 package edu.princeton.cs.algs4;
@@ -21,6 +18,7 @@ import java.net.URL;
 import java.util.LinkedList;
 
 /**
+ * <p><b>Overview.</b>
  * The {@code StdAudio} class provides a basic capability for
  * playing, reading, and saving audio.
  * It uses a simple audio model that allows you
@@ -29,58 +27,47 @@ import java.util.LinkedList;
  * The samples are played in real time using a sampling
  * rate of 44,100 Hz.
  * In addition to playing individual samples, standard audio supports
- * reading, writing, and playing audio files.
+ * reading, writing, and playing audio files in a variety of standard formats.
  * <p>
  * <b>Getting started.</b>
- * To use this class, you must have {@code StdAudio.class} in your
- * Java classpath. If you used our autoinstaller, you should be all set.
- * Otherwise, either download
- * <a href = "https://introcs.cs.princeton.edu/java/code/stdlib.jar">stdlib.jar</a>
- * and add it to your Java classpath or download
- * <a href = "https://introcs.cs.princeton.edu/java/stdlib/StdAudio.java">StdAudio.java</a>
- * and put a copy in your working directory.
- * <p>
- * Now, cut-and-paste the following short program into your editor:
+ * To use this class, you must have {@code StdAudio} in your Java classpath.
+ * Here are three possible ways to do this:
+ * <ul>
+ * <li> If you ran our autoinstaller, use the commands
+ * {@code javac-introcs} and {@code java-introcs} (or {@code javac-algs4}
+ * and {@code java-algs4}) when compiling and executing. These commands
+ * add {@code stdlib.jar} (or {@code algs4.jar}) to the Java classpath, which
+ * provides access to {@code StdAudio}.
+ * <li> Download <a href = "https://introcs.cs.princeton.edu/java/code/stdlib.jar">stdlib.jar</a>
+ * (or <a href = "https://algs4.cs.princeton.edu/code/algs4.jar">algs4.jar</a>)
+ * and add it to the Java classpath.
+ * <li> Download <a href = "https://introcs.cs.princeton.edu/java/stdlib/StdAudio.java">StdAudio.java</a>
+ * and put it in the working directory.
+ * </ul>
+ * p>
+ * As a test, cut-and-paste the following short program into your editor:
  * <pre>
- *   public class TestStdAudio {
- *       public static void main(String[] args) {
- *           double concertA = 440.0;
- *           for (int i = 0; i &lt; StdAudio.SAMPLE_RATE; i++) {
- *               double sample = 0.5 * Math.sin(2*Math.PI * freq * i / StdAudio.SAMPLE_RATE);
- *               StdAudio.play(sample);
- *           }
- *           StdAudio.close();
- *       }
- *   }
- *  </pre>
+ *  public class TestStdAudio {
+ *      public static void main(String[] args) {
+ *          double concertA = 440.0;
+ *          for (int i = 0; i &lt; StdAudio.SAMPLE_RATE; i++) {
+ *              double sample = 0.5 * Math.sin(2*Math.PI * freq * i / StdAudio.SAMPLE_RATE);
+ *              StdAudio.play(sample);
+ *          }
+ *          StdAudio.close();
+ *      }
+ *  }
+ * </pre>
+ * p>
  * If you compile and execute the program, you should hear a pure tone
  * whose frequency is concert A.
  * <p>
- * <b>Reading and writing audio files.</b>
- * You can read and write audio files using the following two methods:
- * <ul>
- * <li> {@link #read(String filename)}
- * <li> {@link #save(String filename, double[] samples)}
- * </ul>
  * p>
- * The first method reads audio samples from an audio file
- * (in WAVE, AU, AIFF, or MIDI formats)
- * and returns them as a double array with values between –1.0 and +1.0.
- * The second method saves the samples in the specified double array to an
- * audio file (in WAVE, AU, or AIFF formats).
- * The file extensions corresponding to WAVE, AU, AIFF, and MIDI files
- * are {@code .wav}, {@code .au}, {@code .aiff}, and {@code .midi},
- * respectively.
- * The sound format is assumed to use a sampling rate of 44,100 Hz,
- * 16 bits per sample, and monaural audio.
- * <p>
- * p>
- * <b>Playing audio.</b>
- * You can use the following three methods to play audio samples:
+ * <b>Playing audio samples.</b>
+ * You can use the following two methods to play individual audio samples:
  * <ul>
  * <li> {@link #play(double sample)}
  * <li> {@link #play(double[] samples)}
- * <li> {@link #play(String filename)}
  * </ul>
  * p>
  * Each method sends the specified sample (or samples) to the sound card.
@@ -88,9 +75,16 @@ import java.util.LinkedList;
  * sample is outside this range, it will be <em>clipped</em> (rounded to
  * –1.0 or +1.0). The samples are played in real time using a sampling
  * rate of 44,100 Hz.
+ * <p>
  * p>
- * The third method supports playing the samples from a specified
- * audio file (in WAVE, AU, AIFF, or MIDI formats). This can produce
+ * <b>Playing audio files.</b>
+ * You can use the following method to play an audio file:
+ * <ul>
+ * <li> {@link #play(String filename)}
+ * </ul>
+ * p>
+ * It plays an audio file (in WAVE, AU, AIFF, or MIDI format) and does
+ * not return until the audio file is finished playing. This can produce
  * particularly striking programs with minimal code.
  * For example, the following code fragment plays a drum loop:
  *
@@ -106,6 +100,45 @@ import java.util.LinkedList;
  * and <a href = "https://introcs.cs.princeton.edu/java/stdlib/SnareDrum.wav">SnareDrum.wav</a>)
  * must be accessible to Java, typically
  * by being in the same directory as the {@code .class} file.
+ * p>
+ *
+ * <b>Reading and writing audio files.</b>
+ * You can read and write audio files using the following two methods:
+ * <ul>
+ * <li> {@link #read(String filename)}
+ * <li> {@link #save(String filename, double[] samples)}
+ * </ul>
+ * p>
+ * The first method reads audio samples from an audio file
+ * (in WAVE, AU, AIFF, or MIDI format)
+ * and returns them as a double array with values between –1.0 and +1.0.
+ * The second method saves the samples in the specified double array to an
+ * audio file (in WAVE, AU, or AIFF format).
+ * <p>
+ * p>
+ * <b>Audio file formats.</b>
+ * {@code StdAudio} relies on the
+ * <a href = "https://www.oracle.com/java/technologies/javase/jmf-211-formats.html">Java Media Framework</a>
+ * for reading, writing, and playing  audio files. You should be able to read or play files
+ * in WAVE, AU, AIFF, and MIDI formats and save them to WAVE, AU, and AIFF formats.
+ * The file extensions corresponding to WAVE, AU, AIFF, and MIDI files
+ * are {@code .wav}, {@code .au}, {@code .aiff}, and {@code .midi},
+ * respectively.
+ * Some systems support additional audio file formats, but probably not MP3 or M4A.
+ * p>
+ * The Java Media Framework supports a variety of different <em>audio data formats</em>,
+ * which includes
+ * <ul>
+ * <Li> the sampling rate (e.g., 44,100 Hz);
+ * <li> the number of bits per sample per channel (e.g., 8-bit or 16-bit);
+ * <li> the number of channels (e.g., monaural or stereo);
+ * <li> the byte ordering (e.g., little endian or big endian); and
+ * <li> the encoding scheme (typically linear PCM).
+ * </ul>
+ * p>
+ * When saving files, {@code StdAudio} uses a sampling rate of 44,100 Hz,
+ * 16 bits per sample, monaural audio, little endian, and linear PCM encoding.
+ * <p>
  * p>
  * <b>Recording audio.</b>
  * You can use the following methods to record audio samples that are
@@ -123,10 +156,10 @@ import java.util.LinkedList;
  * {@code StdAudio} does not currently support recording audio that calls
  * either {@link #play(String filename)} or
  * {@link #playInBackground(String filename)}, as these may use different
- * sound formats, such as 8-bit and stereo.
+ * data formats, such as 8-bit and stereo.
  * p>
- * <b>Playing audio in a background thread.</b>
- * You can use the following methods to play audio in a background thread
+ * <b>Playing audio files in a background thread.</b>
+ * You can use the following methods to play an audio file in a background thread
  * (e.g., as a background score in your program).
  * <ul>
  * <li> {@link #playInBackground(String filename)}
@@ -136,23 +169,21 @@ import java.util.LinkedList;
  * Each call to the first method plays the specified sound in a separate background
  * thread. Unlike with the {@link play} methods, your program will not wait
  * for the samples to finish playing before continuing.
- * It supports playing audio files in WAVE, AU, AIFF, or MIDI formats.
+ * It supports playing an audio file in WAVE, AU, AIFF, or MIDI format.
  * It is possible to play
  * multiple audio files simultaneously (in separate background threads).
  * The second method stops the playing of all audio in background threads.
  * p>
- * <b>Closing standard audio.</b>
+ * <b>Draining standard audio.</b>
  * On some systems, your Java program may terminate before all of the samples have been
- * played. To prevent this, it is recommend that you call one of the following two
- * method to indicate that you are done with using standard audio:
+ * sent to the sound card. To prevent this, it is recommend that you call the
+ * following method to indicate that you are done using standard audio:
  * <ul>
  * <li> {@link #drain()}
- * <li> {@link #close()}
  * </ul>
  * p>
- * The first method drain any samples queued to the sound card that have not yet been played.
- * The second method also closes standard audio so that it cannot be used again in the same
- * program.
+ * The method drains any samples queued to the sound card that have not yet been
+ * sent to the sound card.
  * p>
  * <b>Reference.</b>
  * For additional documentation,
@@ -160,6 +191,7 @@ import java.util.LinkedList;
  * <em>Computer Science: An Interdisciplinary Approach</em>
  * by Robert Sedgewick and Kevin Wayne.
  * <p>
+ *
  * @author Robert Sedgewick
  * @author Kevin Wayne
  */
@@ -282,10 +314,12 @@ public final class StdAudio {
     /**
      * Closes standard audio.
      */
+/*
     public static void close() {
         drain();
         line.stop();
     }
+*/
 
     /**
      * Writes one sample (between –1.0 and +1.0) to standard audio.
@@ -313,7 +347,7 @@ public final class StdAudio {
         buffer[bufferSize++] = (byte) s;
         buffer[bufferSize++] = (byte) (s >> 8);   // little endian
 
-        // send to sound card if buffer is full        
+        // send to sound card if buffer is full
         if (bufferSize >= buffer.length) {
             line.write(buffer, 0, buffer.length);
             bufferSize = 0;
@@ -659,6 +693,12 @@ public final class StdAudio {
             a[n++] = item;                            // add item
         }
 
+
+        // number of items in queue
+        public int size() {
+            return n;
+        }
+
         // return the items as an array of length n
         public double[] toArray() {
             double[] result = new double[n];
@@ -670,56 +710,39 @@ public final class StdAudio {
     }
 
 
-    /***************************************************************************
-     * Unit tests {@code StdAudio}.
-     ***************************************************************************/
-
-    // create a note (sine wave) of the given frequency (Hz), for the given
-    // duration (seconds) scaled to the given volume (amplitude)
-    private static double[] note(double hz, double duration, double amplitude) {
-        int n = (int) (StdAudio.SAMPLE_RATE * duration);
-        double[] a = new double[n + 1];
-        for (int i = 0; i <= n; i++)
-            a[i] = amplitude * Math.sin(2 * Math.PI * i * hz / StdAudio.SAMPLE_RATE);
-        return a;
-    }
-
-
     /**
-     * Test client - play an A major scale to standard audio.
+     * Test client - plays some sound files and concert A.
      *
-     * @param args the command-line arguments
-     */
-    /**
-     * Test client - play an A major scale to standard audio.
-     *
-     * @param args the command-line arguments
+     * @param args the command-line arguments (none should be specified)
      */
     public static void main(String[] args) {
-        double[] samples2 = StdAudio.read("test.midi");
-        StdAudio.play(samples2);
-        StdAudio.play("test.midi");
-        double[] samples = StdAudio.read("stomp.wav");
-        StdAudio.play(samples);
-        StdAudio.play("stomp.wav");
-        StdAudio.play("Circuit.m4r");
-
         // 440 Hz for 1 sec
         double freq = 440.0;
         for (int i = 0; i <= StdAudio.SAMPLE_RATE; i++) {
             StdAudio.play(0.5 * Math.sin(2 * Math.PI * freq * i / StdAudio.SAMPLE_RATE));
         }
 
-        // scale increments
-        int[] steps = {0, 2, 4, 5, 7, 9, 11, 12};
-        for (int i = 0; i < steps.length; i++) {
-            double hz = 440.0 * Math.pow(2, steps[i] / 12.0);
-            StdAudio.play(note(hz, 1.0, 0.5));
-        }
 
+        String base = "https://introcs.cs.princeton.edu/java/stdlib/";
+
+        // play some sound files
+        StdAudio.play(base + "test.wav");          // helicopter
+        StdAudio.play(base + "test-22050.wav");    // twenty-four
+        StdAudio.play(base + "test.midi");         // a Mozart measure
+
+        // read and play some sound files
+        StdAudio.play(StdAudio.read(base + "test.wav"));
+        StdAudio.play(StdAudio.read(base + "test-22050.wav"));
+        StdAudio.play(StdAudio.read(base + "test.midi"));
+
+        // a sound loop
+        for (int i = 0; i < 10; i++) {
+            StdAudio.play(base + "BaseDrum.wav");
+            StdAudio.play(base + "SnareDrum.wav");
+        }
 
         // need to call this in non-interactive stuff so the program doesn't terminate
         // until all the sound leaves the speaker.
-        StdAudio.close();
+        StdAudio.drain();
     }
 }

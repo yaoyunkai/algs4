@@ -168,6 +168,12 @@ public final class Draw implements ActionListener, MouseListener, MouseMotionLis
     // current pen color
     private Color penColor;
 
+    // default title of drawing window
+    private static final String DEFAULT_TITLE = "Standard Draw";
+
+    // current title of drawing window
+    private String title = DEFAULT_TITLE;
+
     // canvas size
     private int width = DEFAULT_SIZE;
     private int height = DEFAULT_SIZE;
@@ -179,9 +185,6 @@ public final class Draw implements ActionListener, MouseListener, MouseMotionLis
     private boolean defer = false;
 
     private double xmin, ymin, xmax, ymax;
-
-    // name of window
-    private String name = "Draw";
 
     // for synchronization
     private final Object mouseLock = new Object();
@@ -212,16 +215,6 @@ public final class Draw implements ActionListener, MouseListener, MouseMotionLis
     // event-based listeners
     private final ArrayList<DrawListener> listeners = new ArrayList<DrawListener>();
 
-
-    /**
-     * Initializes an empty drawing object with the given name.
-     *
-     * @param name the title of the drawing window.
-     */
-    public Draw(String name) {
-        this.name = name;
-        init();
-    }
 
     /**
      * Initializes an empty drawing object.
@@ -267,7 +260,7 @@ public final class Draw implements ActionListener, MouseListener, MouseMotionLis
         // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);            // closes all windows
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);      // closes only current window
         frame.setFocusTraversalKeysEnabled(false);  // to recognize VK_TAB with isKeyPressed()
-        frame.setTitle(name);
+        frame.setTitle(title);
         frame.setJMenuBar(createMenuBar());
         frame.pack();
         frame.requestFocusInWindow();
@@ -297,7 +290,6 @@ public final class Draw implements ActionListener, MouseListener, MouseMotionLis
     public void setDefaultCloseOperation(int value) {
         frame.setDefaultCloseOperation(value);
     }
-
 
     /**
      * Sets the canvas (drawing area) to be <em>width</em>-by-<em>height</em> pixels.
@@ -334,9 +326,8 @@ public final class Draw implements ActionListener, MouseListener, MouseMotionLis
         return menuBar;
     }
 
-
     /***************************************************************************
-     *  User and screen coordinate systems.
+     *  Input validation helper methods.
      ***************************************************************************/
 
     // throw an IllegalArgumentException if x is NaN or infinite
@@ -354,6 +345,27 @@ public final class Draw implements ActionListener, MouseListener, MouseMotionLis
     private static void validateNotNull(Object x, String name) {
         if (x == null) throw new IllegalArgumentException(name + " is null");
     }
+
+
+    /***************************************************************************
+     *  Set the title of the drawing window.
+     ***************************************************************************/
+
+    /**
+     * Sets the title of the drawing window to the specified string.
+     *
+     * @param title the title
+     * @throws IllegalArgumentException if {@code title} is {@code null}
+     */
+    public void setTitle(String title) {
+        validateNotNull(title, "title");
+        this.title = title;
+        frame.setTitle(title);
+    }
+
+    /***************************************************************************
+     *  User and screen coordinate systems.
+     ***************************************************************************/
 
     /**
      * Sets the x-scale to be the default (between 0.0 and 1.0).
@@ -985,7 +997,7 @@ public final class Draw implements ActionListener, MouseListener, MouseMotionLis
 
     /**
      * Draws the specified image centered at (<em>x</em>, <em>y</em>).
-     * The supported image formats are JPEG, PNG, and GIF.
+     * The supported image formats are typically JPEG, PNG, GIF, TIFF, and BMP.
      * As an optimization, the picture is cached, so there is no performance
      * penalty for redrawing the same image multiple times (e.g., in an animation).
      * However, if you change the picture file after drawing it, subsequent
@@ -1016,7 +1028,7 @@ public final class Draw implements ActionListener, MouseListener, MouseMotionLis
     /**
      * Draws the specified image centered at (<em>x</em>, <em>y</em>),
      * rotated given number of degrees.
-     * The supported image formats are JPEG, PNG, and GIF.
+     * The supported image formats are typically JPEG, PNG, GIF, TIFF, and BMP.
      *
      * @param x        the center <em>x</em>-coordinate of the image
      * @param y        the center <em>y</em>-coordinate of the image
@@ -1049,7 +1061,7 @@ public final class Draw implements ActionListener, MouseListener, MouseMotionLis
     /**
      * Draws the specified image centered at (<em>x</em>, <em>y</em>),
      * rescaled to the specified bounding box.
-     * The supported image formats are JPEG, PNG, and GIF.
+     * The supported image formats are typically JPEG, PNG, GIF, TIFF, and BMP.
      *
      * @param x            the center <em>x</em>-coordinate of the image
      * @param y            the center <em>y</em>-coordinate of the image
@@ -1091,7 +1103,7 @@ public final class Draw implements ActionListener, MouseListener, MouseMotionLis
     /**
      * Draws the specified image centered at (<em>x</em>, <em>y</em>), rotated
      * given number of degrees, and rescaled to the specified bounding box.
-     * The supported image formats are JPEG, PNG, and GIF.
+     * The supported image formats are typically JPEG, PNG, GIF, TIFF, and BMP.
      *
      * @param x            the center <em>x</em>-coordinate of the image
      * @param y            the center <em>y</em>-coordinate of the image
@@ -1295,43 +1307,33 @@ public final class Draw implements ActionListener, MouseListener, MouseMotionLis
 
     /**
      * Saves the drawing to using the specified filename.
-     * The supported image formats are JPEG and PNG;
-     * the filename suffix must be {@code .jpg} or {@code .png}.
+     * The supported image formats are typically JPEG, PNG, GIF, TIFF, and BMP.
      *
      * @param filename the name of the file with one of the required suffixes
      * @throws IllegalArgumentException if {@code filename} is {@code null}
      */
     public void save(String filename) {
         validateNotNull(filename, "filename");
+        if (filename.length() == 0) throw new IllegalArgumentException("argument to save() is the empty string");
         File file = new File(filename);
         String suffix = filename.substring(filename.lastIndexOf('.') + 1);
+        if (!filename.contains(".")) suffix = "";
 
-        // png files
-        if ("png".equalsIgnoreCase(suffix)) {
-            try {
-                ImageIO.write(offscreenImage, suffix, file);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        try {
+            // if the file format supports transparency (such as PNG or GIF)
+            if (ImageIO.write(onscreenImage, suffix, file)) return;
 
-        // need to change from ARGB to RGB for JPEG
-        else if ("jpg".equalsIgnoreCase(suffix)) {
-            // Credit to arnabanimesh for simpler ARGB to RGB conversion
-            BufferedImage rgbBuffer = new BufferedImage(2 * width, 2 * height, BufferedImage.TYPE_INT_RGB);
-            Graphics2D rgb2d = rgbBuffer.createGraphics();
-            rgb2d.drawImage(onscreenImage, 0, 0, null);
-            rgb2d.dispose();
-            try {
-                ImageIO.write(rgbBuffer, suffix, file);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("Invalid image file type: " + suffix);
+            // if the file format does not support transparency (such as JPEG or BMP)
+            BufferedImage saveImage = new BufferedImage(2 * width, 2 * height, BufferedImage.TYPE_INT_RGB);
+            saveImage.createGraphics().drawImage(onscreenImage, 0, 0, Color.WHITE, null);
+            if (ImageIO.write(saveImage, suffix, file)) return;
+
+            // failed to save the file; probably wrong format
+            System.out.printf("Error: the filetype '%s' is not supported\n", suffix);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
-
 
     /**
      * This method cannot be called directly.
@@ -1630,7 +1632,8 @@ public final class Draw implements ActionListener, MouseListener, MouseMotionLis
     public static void main(String[] args) {
 
         // create one drawing window
-        Draw draw1 = new Draw("Test client 1");
+        Draw draw1 = new Draw();
+        draw1.setTitle("Test client 1");
         draw1.square(0.2, 0.8, 0.1);
         draw1.filledSquare(0.8, 0.8, 0.2);
         draw1.circle(0.8, 0.2, 0.2);
@@ -1640,8 +1643,9 @@ public final class Draw implements ActionListener, MouseListener, MouseMotionLis
 
 
         // create another one
-        Draw draw2 = new Draw("Test client 2");
+        Draw draw2 = new Draw();
         draw2.setCanvasSize(900, 200);
+        draw2.setTitle("Test client 2");
         // draw a blue diamond
         draw2.setPenRadius();
         draw2.setPenColor(Draw.BLUE);

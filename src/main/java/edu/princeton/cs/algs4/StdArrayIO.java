@@ -10,19 +10,19 @@
  *  and booleans from standard input and printing them out to
  *  standard output.
  *
- *  % more tinyDouble1D.txt 
+ *  % more tinyDouble1D.txt
  *  4
  *    .000  .246  .222  -.032
  *
- *  % more tinyDouble2D.txt 
- *  4 3 
- *    .000  .270  .000 
- *    .246  .224 -.036 
- *    .222  .176  .0893 
- *   -.032  .739  .270 
+ *  % more tinyDouble2D.txt
+ *  4 3
+ *    .000  .270  .000
+ *    .246  .224 -.036
+ *    .222  .176  .0893
+ *   -.032  .739  .270
  *
- *  % more tinyBoolean2D.txt 
- *  4 3 
+ *  % more tinyBoolean2D.txt
+ *  4 3
  *    1 1 0
  *    0 0 0
  *    0 1 1
@@ -30,19 +30,19 @@
  *
  *  % cat tinyDouble1D.txt tinyDouble2D.txt tinyBoolean2D.txt | java StdArrayIO
  *  4
- *    0.00000   0.24600   0.22200  -0.03200 
+ *    0.00000   0.24600   0.22200  -0.03200
  *
  *  4 3
- *    0.00000   0.27000   0.00000 
- *    0.24600   0.22400  -0.03600 
- *    0.22200   0.17600   0.08930 
- *    0.03200   0.73900   0.27000 
+ *    0.00000   0.27000   0.00000
+ *    0.24600   0.22400  -0.03600
+ *    0.22200   0.17600   0.08930
+ *    0.03200   0.73900   0.27000
  *
  *  4 3
- *  1 1 0 
- *  0 0 0 
- *  0 1 1 
- *  1 1 1 
+ *  1 1 0
+ *  0 0 0
+ *  0 1 1
+ *  1 1 1
  *
  ******************************************************************************/
 
@@ -95,7 +95,6 @@ public class StdArrayIO {
         }
         StdOut.println();
     }
-
 
     /**
      * Reads a 2D array of doubles from standard input and returns it.
@@ -160,7 +159,6 @@ public class StdArrayIO {
         StdOut.println();
     }
 
-
     /**
      * Reads a 2D array of integers from standard input and returns it.
      *
@@ -194,7 +192,6 @@ public class StdArrayIO {
             StdOut.println();
         }
     }
-
 
     /**
      * Reads a 1D array of booleans from standard input and returns it.
@@ -259,7 +256,6 @@ public class StdArrayIO {
             StdOut.println();
         }
     }
-
 
     /**
      * Unit tests {@code StdArrayIO}.

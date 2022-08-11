@@ -1,7 +1,7 @@
 /******************************************************************************
  *  Compilation:  javac BinaryStdIn.java
  *  Execution:    java BinaryStdIn < input > output
- *  Dependencies: none             
+ *  Dependencies: none
  *
  *  Supports reading binary data from standard input.
  *
