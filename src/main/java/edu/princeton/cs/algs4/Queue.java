@@ -119,14 +119,14 @@ public class Queue<Item> implements Iterable<Item> {
         queue.enqueue("adfdd");
         queue.enqueue("adf11");
         queue.enqueue("11ccadf");
-        String d = queue.dequeue();
-        d = queue.dequeue();
-        d = queue.dequeue();
-        d = queue.dequeue();
-        d = queue.dequeue();
-        d = queue.dequeue();
-        d = queue.dequeue();
-        System.out.println("first dequeue: " + d);
+        // String d = queue.dequeue();
+        // d = queue.dequeue();
+        // d = queue.dequeue();
+        // d = queue.dequeue();
+        // d = queue.dequeue();
+        // d = queue.dequeue();
+        // d = queue.dequeue();
+        // System.out.println("first dequeue: " + d);
         System.out.println(queue);
     }
 
