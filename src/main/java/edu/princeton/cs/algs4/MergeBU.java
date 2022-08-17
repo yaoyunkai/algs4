@@ -27,6 +27,8 @@ package edu.princeton.cs.algs4;
 /**
  * TODO: 自底向上的归并排序
  *
+ * 比较适合用链表组织的数据。
+ *
  * The {@code MergeBU} class provides static methods for sorting an
  * array using <em>bottom-up mergesort</em>. It is non-recursive.
  * <p>
