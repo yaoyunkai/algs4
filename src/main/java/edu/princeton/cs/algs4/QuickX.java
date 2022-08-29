@@ -42,7 +42,7 @@ public class QuickX {
     public static void sort(Comparable[] a) {
         // StdRandom.shuffle(a);
         sort(a, 0, a.length - 1);
-        assert isSorted(a);
+        // assert isSorted(a);
     }
 
     // quicksort the subarray from a[lo] to a[hi]
