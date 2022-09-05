@@ -126,12 +126,12 @@ public class BST<Key extends Comparable<Key>, Value> {
     public void deleteMin() {
         if (isEmpty()) throw new NoSuchElementException("Symbol table underflow");
         root = deleteMin(root);
-        assert check();
+        // assert check();
     }
 
     private Node deleteMin(Node x) {
         if (x.left == null) return x.right;
-        x.left = deleteMin(x.left);
+        x.left = deleteMin(x.left);  // 找到最左边的结点，然后将指向该结点的链接指向该结点的右子树。
         x.size = size(x.left) + size(x.right) + 1;
         return x;
     }
@@ -164,7 +164,7 @@ public class BST<Key extends Comparable<Key>, Value> {
     public void delete(Key key) {
         if (key == null) throw new IllegalArgumentException("calls delete() with a null key");
         root = delete(root, key);
-        assert check();
+        // assert check();
     }
 
     private Node delete(Node x, Key key) {
@@ -177,9 +177,9 @@ public class BST<Key extends Comparable<Key>, Value> {
             if (x.right == null) return x.left;
             if (x.left == null) return x.right;
             Node t = x;
-            x = min(t.right);
-            x.right = deleteMin(t.right);
-            x.left = t.left;
+            x = min(t.right);  // 取一个结点，目前还没有改变树的结构
+            x.right = deleteMin(t.right);  // deleteMin 最终结果指向的是自己，只不过改变了指向最小结点的链接，让这个链接指向最小结点的右链接。
+            x.left = t.left; // 原结点的左子树比原结点的右子树的最小结点要小
         }
         x.size = size(x.left) + size(x.right) + 1;
         return x;
@@ -373,7 +373,7 @@ public class BST<Key extends Comparable<Key>, Value> {
         if (x == null) return;
         int cmplo = lo.compareTo(x.key);
         int cmphi = hi.compareTo(x.key);
-        if (cmplo < 0) keys(x.left, queue, lo, hi);
+        if (cmplo < 0) keys(x.left, queue, lo, hi);  // 如果给定的key比当前树的key要求，那么要继续往树的左子树寻找
         if (cmplo <= 0 && cmphi >= 0) queue.enqueue(x.key);
         if (cmphi > 0) keys(x.right, queue, lo, hi);
     }
